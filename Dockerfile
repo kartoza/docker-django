@@ -30,13 +30,19 @@ RUN chmod o-rwx /root/.ssh
 
 #-------------Application Specific Stuff ----------------------------------------------------
 RUN apt-get -y install nginx uwsgi uwsgi-plugin-python git python-virtualenv vim
-RUN mkdir /home/web
+# Alternative list for if installing uwsgi from pip
+#RUN apt-get -y install nginx python-dev git python-virtualenv vim
+
 ADD server-conf /home/web/server-conf
+ADD REQUIREMENTS.txt /home/web/REQUIREMENTS.txt
 # Note that ww-data does not have permissions
 # for the django project dir - so we will copy it over and then set the 
-# permissions in teh start script
-ADD django_project /tmp/django_project
-ADD REQUIREMENTS.txt /home/web/REQUIREMENTS.txt
+# permissions in the start script. COPY is like ADD but does not 
+# automatically unpack tarballs. We need to copy it as a tarball
+# and then unzip it as www-data because docker copies files with
+# uid/gid = 0
+COPY django_project.tar.gz /tmp/django_project.tar.gz
+RUN cd /home/web; tar xfz /tmp/django_project.tar.gz; chown -R www-data.www-data /home/web
 # Run any additional tasks here that are too tedious to put in
 # this dockerfile directly.
 ADD setup.sh /setup.sh
@@ -48,4 +54,3 @@ ADD start.sh /start.sh
 RUN chmod 0755 /start.sh
 
 CMD /start.sh
-
