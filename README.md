@@ -12,7 +12,7 @@ docker build -t kartoza/django git://github.com/timlinux/docker-django
 To run a container do:
 
 ```
-docker run --name "django" -p 2222:22 -p 9080:80 -d -t kartoza/django
+docker run --name "django" -p 9080:80 -d -t kartoza/django
 ```
 
 To open the web site go to http://localhost:9080
