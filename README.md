@@ -1,5 +1,5 @@
-docker-ssh
-==========
+docker-django
+=============
 
 A simple docker container that runs ssh
 
